@@ -1,56 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
-import '../styles/index.css';
-
-function Index() {
-  const [date, setDate] = useState(null);
-  useEffect(() => {
-    async function getDate() {
-      const res = await fetch('/api/date');
-      const newDate = await res.text();
-      setDate(newDate);
-    }
-    getDate();
-  }, []);
-  return (
-    <main>
-      <Helmet>
-        <title>Gatsby + Node.js (TypeScript) API</title>
-      </Helmet>
-      <h1>Gatsby + Node.js (TypeScript) API</h1>
-      <h2>
-        Deployed with{' '}
-        <a
-          href="https://vercel.com/docs"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          Vercel
-        </a>
-        !
-      </h2>
-      <p>
-        <a
-          href="https://github.com/vercel/vercel/tree/main/examples/gatsby"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          This project
-        </a>{' '}
-        is a <a href="https://www.gatsbyjs.org/">Gatsby</a> app with two
-        directories, <code>/src</code> for static content and <code>/api</code>{' '}
-        which contains a serverless{' '}
-        <a href="https://nodejs.org/en/">Node.js (TypeScript)</a> function. See{' '}
-        <a href="/api/date">
-          <code>api/date</code> for the Date API with Node.js (TypeScript)
-        </a>
-        .
-      </p>
-      <br />
-      <h2>The date according to Node.js (TypeScript) is:</h2>
-      <p>{date ? date : 'Loading date...'}</p>
-    </main>
-  );
+import React from "react"
+import { Link } from "gatsby"
+import { graphql } from "gatsby"
+import Layout from "../components/layout"
+const IndexPage = (props) => {
+ const covid19DataSet = props.data.allMongodbCovid19Covid19.edges;
+return (
+ <Layout>
+ <table>
+ <tr>
+ <td>Type</td>
+ <td>Location</td>
+ <td>Hospital</td>
+ <td>Available Bed</td>
+ <td>Links</td>
+ <td>Contact Number</td>
+ <td>Date of Update</td>
+ <td>Comments</td>
+ </tr>
+ {covid19DataSet.map(covid19Data =>
+ <tr>
+ <td>{covid19Data.node.type}</td>
+ <td>{covid19Data.node.location}</td>
+ <td>{covid19Data.node.hospital}</td>
+ <td>{covid19Data.node.available_bed}</td>
+ <td>{covid19Data.node.links}</td>
+ <td>{covid19Data.node.number}</td>
+ <td>{covid19Data.node.date}</td>
+ <td>{covid19Data.node.commentes}</td>
+</tr>
+ )}
+ </table>
+ </Layout>
+)
 }
-
-export default Index;
+export default IndexPage
+export const pageQuery = graphql`
+query MQuery {
+ allMongodbCovid19Covid19 {
+ edges {
+ node {
+ hospital
+ date
+ commentes
+ available_bed
+ links
+ location
+ number
+ type
+ }
+ }
+ }
+}
